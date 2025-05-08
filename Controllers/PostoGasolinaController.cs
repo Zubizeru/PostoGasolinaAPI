@@ -12,6 +12,29 @@ namespace PostoGasolinaAPI.Controllers
             return StatusCode(200, BancoDeDados.Combustiveis);
         }
 
+        [HttpGet("CombustivelEspecificoForeach/{codigoDeCombustivel}")]
+        public IActionResult CombustivelEspecificoForeach(int codigoCombustivel)
+        {
+            foreach (Combustivel combustivel in BancoDeDados.Combustiveis)
+            {
+                if (combustivel.CodigoDoProduto == codigoCombustivel)
+                {
+                    return StatusCode(200,combustivel);
+                }
+            }
+                return StatusCode(400, "Nenhum produto com esse código informado");
+        }
+
+        [HttpGet("CombustivelEspecificoLinq/{codigoDeCombustivel}")]
+        public IActionResult CombustivelEspecificoLinq(int codigoCombustivel)
+        {
+            Combustivel? combustivel = BancoDeDados.Combustiveis.Find(c=> c.CodigoDoProduto.Equals(codigoCombustivel));
+            if (combustivel == null)
+                return StatusCode(400, "Nenhum produto com esse código informado");
+            else
+                return StatusCode(200, combustivel);
+        }
+
         [HttpPost("Comprar Combustivel")]
         public IActionResult ComprarCombustivel (int codigoDeCombustivel, double litros)
         {
