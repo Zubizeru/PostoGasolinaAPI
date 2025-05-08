@@ -16,7 +16,7 @@ namespace PostoGasolinaAPI.Controllers
         public IActionResult ComprarCombustivel (int codigoDeCombustivel, double litros)
         {
             Combustivel? combustivelEscolhido = null;
-
+            //
             foreach (Combustivel combustivel in BancoDeDados.Combustiveis)
             {
                 if(combustivel.CodigoDoProduto == codigoDeCombustivel)
