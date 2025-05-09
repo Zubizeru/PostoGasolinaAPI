@@ -9,30 +9,17 @@ namespace PostoGasolinaAPI.Controllers
         [HttpGet("ListaCombustiveis")]
         public IActionResult ListaCombustiveis()
         {
-            return StatusCode(200, BancoDeDados.Combustiveis);
+            return StatusCode(200, BancoDeDados.ListarCombustiveis());
         }
 
-        [HttpGet("CombustivelEspecificoForeach/{codigoDeCombustivel}")]
-        public IActionResult CombustivelEspecificoForeach(int codigoCombustivel)
+        [HttpGet("CombustivelEspecifico/{codigoCombustivel}")]
+        public IActionResult CombustivelEspecifico(int codigoCombustivel)
         {
-            foreach (Combustivel combustivel in BancoDeDados.Combustiveis)
-            {
-                if (combustivel.CodigoDoProduto == codigoCombustivel)
-                {
-                    return StatusCode(200,combustivel);
-                }
-            }
-                return StatusCode(400, "Nenhum produto com esse código informado");
-        }
+           Combustivel? combustivelEncontrado = BancoDeDados.BuscaCombustivelEspecifico(codigoCombustivel);
+            if (combustivelEncontrado == null)
+                return StatusCode(400, "Nenhum combustivel com esse código foi encontrado");
 
-        [HttpGet("CombustivelEspecificoLinq/{codigoDeCombustivel}")]
-        public IActionResult CombustivelEspecificoLinq(int codigoCombustivel)
-        {
-            Combustivel? combustivel = BancoDeDados.Combustiveis.Find(c=> c.CodigoDoProduto.Equals(codigoCombustivel));
-            if (combustivel == null)
-                return StatusCode(400, "Nenhum produto com esse código informado");
-            else
-                return StatusCode(200, combustivel);
+            return StatusCode(200, combustivelEncontrado);
         }
 
         [HttpPost("Comprar Combustivel")]
@@ -40,7 +27,7 @@ namespace PostoGasolinaAPI.Controllers
         {
             Combustivel? combustivelEscolhido = null;
             
-            foreach (Combustivel combustivel in BancoDeDados.Combustiveis)
+            foreach (Combustivel combustivel in BancoDeDados.ListarCombustiveis())
             {
                 if(combustivel.CodigoDoProduto == codigoDeCombustivel)
                 {
